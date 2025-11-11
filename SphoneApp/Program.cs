@@ -96,7 +96,7 @@ public class Program
         Console.WriteLine();
         Console.WriteLine("Please select an option:");
         Console.WriteLine("1. Dial a Number");
-        Console.WriteLine("2. View History of Dialled Numbers");
+        Console.WriteLine("2. View History of Dialed Numbers");
         Console.WriteLine("3. Contacts");
         Console.WriteLine("4. Exit");
         Console.WriteLine();
