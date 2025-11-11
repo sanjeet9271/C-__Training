@@ -33,9 +33,11 @@ public class DialNumberService
 
     public void DialNumber(string phoneNumber)
     {
-        _historyManager.AddCallToHistory(phoneNumber);
+        PhoneNumberUtils.ValidatePhoneNumber(phoneNumber);
+        string cleanNumber = PhoneNumberUtils.CleanPhoneNumber(phoneNumber);
+        _historyManager.AddCallToHistory(cleanNumber);
 
-        Console.WriteLine($"\nDialing {phoneNumber}...");
+        Console.WriteLine($"\nDialing {cleanNumber}...");
         Console.WriteLine("Call connected!");
         Console.WriteLine("Call ended.");
     }
