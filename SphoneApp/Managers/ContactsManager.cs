@@ -58,13 +58,13 @@ public class ContactsManager
     }
     public List<Contact> SearchByNumber(string searchTerm)
     {
-        return _contacts.Where(c => c.CustomProperties.Any(cp => cp.PhoneNo.Contains(searchTerm))).ToList();
+        return _contacts.Where(c => c.PhoneNo.Contains(searchTerm)).ToList();
     }
     public bool IsDuplicateContact(string name, string number)
     {
         string cleanedNumber = PhoneNumberUtils.CleanPhoneNumber(number);
         return _contacts.Any(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
-                                  c.HasPhoneNumber(cleanedNumber));
+                                  c.PhoneNo == cleanedNumber);
     }
 }
 

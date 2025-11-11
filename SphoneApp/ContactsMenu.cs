@@ -190,33 +190,7 @@ public class ContactsMenu
         if (int.TryParse(input, out int index) && index > 0 && index <= contacts.Count)
         {
             Contact selectedContact = contacts[index - 1];
-
-            if (selectedContact.CustomProperties.Count == 1)
-            {
-                string number = selectedContact.CustomProperties[0].PhoneNo;
-                _dialService.DialNumber(number);
-            }
-            else
-            {
-                Console.WriteLine($"\nSelect number for {selectedContact.Name}:");
-                for (int i = 0; i < selectedContact.CustomProperties.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}. {selectedContact.CustomProperties[i]}");
-                }
-
-                Console.Write("Enter choice: ");
-                string? numChoice = Console.ReadLine();
-
-                if (int.TryParse(numChoice, out int numIndex) && numIndex > 0 && numIndex <= selectedContact.CustomProperties.Count)
-                {
-                    string number = selectedContact.CustomProperties[numIndex - 1].PhoneNo;
-                    _dialService.DialNumber(number);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice!");
-                }
-            }
+            _dialService.DialNumber(selectedContact.PhoneNo);
         }
         else
         {
