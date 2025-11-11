@@ -105,6 +105,11 @@ public class ContactsMenu
         Console.Write("Enter choice (1 or 2): ");
         string? typeChoice = Console.ReadLine();
 
+        if (typeChoice != "1" && typeChoice != "2")
+        {
+            Console.WriteLine("Invalid choice! Please enter 1 for Home or 2 for Work.");
+            return;
+        }
         ContactType type = typeChoice == "1" ? ContactType.Home : ContactType.Work;
 
         Contact contact = new Contact(name, cleanNumber, type);
