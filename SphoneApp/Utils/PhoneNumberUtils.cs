@@ -49,7 +49,7 @@ public static class PhoneNumberUtils
         
         if (cleanNumber.Length == ValidPhoneNumberLength)
         {
-            return $"({cleanNumber.Substring(0, 3)}) {cleanNumber.Substring(3, 3)}-{cleanNumber.Substring(6)}";
+            return $"({cleanNumber[0..3]}) {cleanNumber[3..6]}-{cleanNumber[6..]}";
         }
         
         return phoneNumber;
