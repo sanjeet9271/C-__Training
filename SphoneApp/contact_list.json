@@ -1,11 +1,7 @@
 [
   {
     "Name": "Ayansh",
-    "CustomProperties": [
-      {
-        "PhoneNo": "3214567800",
-        "Type": 0
-      }
-    ]
+    "PhoneNo": "3214567800",
+    "Type": 0
   }
 ]

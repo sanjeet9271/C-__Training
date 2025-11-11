@@ -48,7 +48,9 @@ public class Program
                         break;
                     case "3":
                         instance.Contacts();
-                        break;
+                        Console.Clear();
+                        instance.WelcomeDisplay();
+                        continue;
                     case "4":
                         Console.WriteLine("\nThank you for using Sphone App. Goodbye!");
                         return;

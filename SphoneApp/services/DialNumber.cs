@@ -20,15 +20,7 @@ public class DialNumberService
         Console.Write("Enter a 10-digit phone number: ");
         string? number = Console.ReadLine();
 
-        PhoneNumberUtils.ValidatePhoneNumber(number);
-
-        string cleanNumber = PhoneNumberUtils.CleanPhoneNumber(number!);
-
-        _historyManager.AddCallToHistory(cleanNumber);
-
-        Console.WriteLine($"\nDialing {cleanNumber}...");
-        Console.WriteLine("Call connected!");
-        Console.WriteLine("Call ended.");
+        DialNumber(number!);
     }
 
     public void DialNumber(string phoneNumber)
