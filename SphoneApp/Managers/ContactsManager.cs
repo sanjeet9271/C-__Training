@@ -62,8 +62,9 @@ public class ContactsManager
     }
     public bool IsDuplicateContact(string name, string number)
     {
+        string cleanedNumber = PhoneNumberUtils.CleanPhoneNumber(number);
         return _contacts.Any(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
-                                  c.HasPhoneNumber(number));
+                                  c.HasPhoneNumber(cleanedNumber));
     }
 }
 
