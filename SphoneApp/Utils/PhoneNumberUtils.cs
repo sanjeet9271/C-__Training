@@ -4,25 +4,24 @@ namespace SphoneApp.Utils;
 
 public static class PhoneNumberUtils
 {
-    private const int ValidPhoneNumberLength = 10;
     public static void ValidatePhoneNumber(string? phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
-            throw new InvalidPhoneNumberException("Phone number cannot be empty!");
+            throw new InvalidPhoneNumberException(ConstantStrings.PHONE_NUMBER_CANNOT_BE_EMPTY);
         }
 
         // Remove spaces and dashes for validation
         string cleanNumber = CleanPhoneNumber(phoneNumber);
 
-        if (cleanNumber.Length != ValidPhoneNumberLength)
+        if (cleanNumber.Length != ConstantStrings.VALID_PHONE_NUMBER_LENGTH)
         {
-            throw new InvalidPhoneNumberException($"Invalid phone number! Please enter exactly {ValidPhoneNumberLength} digits.");
+            throw new InvalidPhoneNumberException(string.Format(ConstantStrings.INVALID_PHONE_NUMBER_LENGTH, ConstantStrings.VALID_PHONE_NUMBER_LENGTH));
         }
 
         if (!IsAllDigits(cleanNumber))
         {
-            throw new InvalidPhoneNumberException("Phone number must contain only digits!");
+            throw new InvalidPhoneNumberException(ConstantStrings.PHONE_NUMBER_MUST_BE_DIGITS);
         }
     }
 
@@ -32,7 +31,7 @@ public static class PhoneNumberUtils
             return false;
 
         string cleanNumber = CleanPhoneNumber(phoneNumber);
-        return cleanNumber.Length == ValidPhoneNumberLength && IsAllDigits(cleanNumber);
+        return cleanNumber.Length == ConstantStrings.VALID_PHONE_NUMBER_LENGTH && IsAllDigits(cleanNumber);
     }
 
     public static string CleanPhoneNumber(string phoneNumber)
@@ -47,7 +46,7 @@ public static class PhoneNumberUtils
     {
         string cleanNumber = CleanPhoneNumber(phoneNumber);
         
-        if (cleanNumber.Length == ValidPhoneNumberLength)
+        if (cleanNumber.Length == ConstantStrings.VALID_PHONE_NUMBER_LENGTH)
         {
             return $"({cleanNumber[0..3]}) {cleanNumber[3..6]}-{cleanNumber[6..]}";
         }

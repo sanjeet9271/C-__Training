@@ -1,7 +1,42 @@
 [
   {
-    "Name": "Ayansh",
-    "PhoneNo": "3214567800",
-    "Type": 0
+    "Name": "John Doe",
+    "PhoneNumbers": [
+      {
+        "PhoneNo": "9876543210",
+        "Type": 0
+      },
+      {
+        "PhoneNo": "8765432109",
+        "Type": 1
+      }
+    ]
+  },
+  {
+    "Name": "Jane Smith",
+    "PhoneNumbers": [
+      {
+        "PhoneNo": "7654321098",
+        "Type": 0
+      }
+    ]
+  },
+  {
+    "Name": "Bob Wilson",
+    "PhoneNumbers": [
+      {
+        "PhoneNo": "6543210987",
+        "Type": 1
+      },
+      {
+        "PhoneNo": "5432109876",
+        "Type": 0
+      },
+      {
+        "PhoneNo": "4321098765",
+        "Type": 1
+      }
+    ]
   }
 ]
+

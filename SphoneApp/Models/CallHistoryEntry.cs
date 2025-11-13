@@ -1,12 +1,51 @@
 namespace SphoneApp.Models;
-public class CallHistoryEntry
+
+// Generic call history entry that can store either contact info or just a number
+public class CallHistoryEntry<T>
 {
-    public string PhoneNumber { get; set; }
+    public T Data { get; set; }
     public DateTime CalledAt { get; set; }
 
-    public CallHistoryEntry(string phoneNumber = "", DateTime? calledAt = null)
+    // Parameterless constructor for JSON deserialization
+    public CallHistoryEntry()
+    {
+        Data = default(T)!;
+        CalledAt = DateTime.Now;
+    }
+
+    public CallHistoryEntry(T data, DateTime? calledAt = null)
+    {
+        Data = data;
+        CalledAt = calledAt ?? DateTime.Now;
+    }
+}
+
+// Wrapper for call history data - can be either contact or just phone number
+public class CallHistoryData
+{
+    public string PhoneNumber { get; set; }
+    public string? ContactName { get; set; }
+    public bool HasContact => !string.IsNullOrEmpty(ContactName);
+
+    // Parameterless constructor for JSON deserialization
+    public CallHistoryData()
+    {
+        PhoneNumber = string.Empty;
+        ContactName = null;
+    }
+
+    public CallHistoryData(string phoneNumber, string? contactName = null)
     {
         PhoneNumber = phoneNumber;
-        CalledAt = calledAt ?? DateTime.Now;
+        ContactName = contactName;
+    }
+
+    public override string ToString()
+    {
+        if (HasContact)
+        {
+            return $"{ContactName} - {PhoneNumber}";
+        }
+        return PhoneNumber;
     }
 }

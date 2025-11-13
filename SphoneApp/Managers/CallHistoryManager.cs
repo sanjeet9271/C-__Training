@@ -1,56 +1,88 @@
-using System.Text.Json;
 using SphoneApp.Models;
+using SphoneApp.Utils;
+using SphoneApp.Interfaces;
 
 namespace SphoneApp.Managers;
-public class CallHistoryManager
+
+public class CallHistoryManager : ICallHistoryManager
 {
-    private List<CallHistoryEntry> _callHistory;
+    private readonly IRepository<CallHistoryEntry<CallHistoryData>> _repository;
 
-    public CallHistoryManager()
+    public CallHistoryManager(IRepository<CallHistoryEntry<CallHistoryData>> repository)
     {
-        _callHistory = new List<CallHistoryEntry>();
-        LoadHistory();
+        _repository = repository;
     }
 
-    private void LoadHistory()
+    // Subscribe to DialManager's CallMade event
+    public void SubscribeToDialManager(IDialManager dialManager)
     {
-        try
+        dialManager.CallMade += OnCallMade;
+    }
+
+    // Event handler for when a call is made
+    private void OnCallMade(object? sender, CallMadeEventArgs e)
+    {
+        AddCallToHistory(e.PhoneNumber, e.ContactName, e.CalledAt);
+    }
+
+    // Display call history
+    public void DisplayHistory()
+    {
+        Console.WriteLine(ConstantStrings.CALL_HISTORY_TITLE);
+        
+        var history = _repository.GetAll();
+        
+        if (history.Count == 0)
         {
-            if (File.Exists(Constants.CallHistoryFilePath))
+            Console.WriteLine(ConstantStrings.NO_DIALED_NUMBERS);
+            return;
+        }
+
+        Console.WriteLine(string.Format(ConstantStrings.TOTAL_CALLS, history.Count));
+        
+        for (int i = 0; i < history.Count; i++)
+        {
+            var entry = history[i];
+            var data = entry.Data;
+            
+            string displayText;
+            if (data.HasContact)
             {
-                string json = File.ReadAllText(Constants.CallHistoryFilePath);
-                _callHistory = JsonSerializer.Deserialize<List<CallHistoryEntry>>(json) ?? new List<CallHistoryEntry>();
+                // Show contact name with number
+                string formattedNumber = PhoneNumberUtils.FormatPhoneNumber(data.PhoneNumber);
+                displayText = $"{data.ContactName,-20} {formattedNumber,-15}";
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Warning: Could not load call history: {ex.Message}");
-            _callHistory = new List<CallHistoryEntry>();
-        }
-    }
-
-    private void SaveHistory()
-    {
-        try
-        {
-            string json = JsonSerializer.Serialize(_callHistory, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(Constants.CallHistoryFilePath, json);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Warning: Could not save call history: {ex.Message}");
+            else
+            {
+                // Show just the number
+                string formattedNumber = PhoneNumberUtils.FormatPhoneNumber(data.PhoneNumber);
+                displayText = $"{formattedNumber,-15}";
+            }
+            
+            string formattedDate = FormatDateTime(entry.CalledAt);
+            Console.WriteLine($"{i + 1}. {displayText} - {formattedDate}");
         }
     }
 
-    public void AddCallToHistory(string phoneNumber)
+    public List<CallHistoryEntry<CallHistoryData>> GetAllHistory()
     {
-        var entry = new CallHistoryEntry(phoneNumber);
-        _callHistory.Insert(0, entry);
-        SaveHistory();
+        return _repository.GetAll();
     }
-    public List<CallHistoryEntry> GetAllHistory()
+
+    private void AddCallToHistory(string phoneNumber, string? contactName, DateTime calledAt)
     {
-        return _callHistory;
+        var data = new CallHistoryData(phoneNumber, contactName);
+        var entry = new CallHistoryEntry<CallHistoryData>(data, calledAt);
+        
+        // Insert at beginning for latest-first ordering
+        var allHistory = _repository.GetAll();
+        allHistory.Insert(0, entry);
+        _repository.SaveChanges();
+    }
+
+    private string FormatDateTime(DateTime dateTime)
+    {
+        return dateTime.ToString("MM/dd/yyyy hh:mm tt");
     }
 }
 
