@@ -3,7 +3,7 @@ using SphoneApp.Interfaces;
 using SphoneApp.Managers;
 using SphoneApp.Models;
 using SphoneApp.Repositories;
-
+using SphoneApp.Services;
 namespace SphoneApp;
 
 public class PhoneApplication
@@ -11,22 +11,22 @@ public class PhoneApplication
     private readonly IDialManager _dialManager;
     private readonly ICallHistoryManager _callHistoryManager;
     private readonly IContactsManager _contactsManager;
+    private readonly IExportService _exportService;
+    private readonly ContactsMenu _contactsMenu;
 
     public PhoneApplication()
     {
-        
         var callHistoryRepository = new JsonRepository<CallHistoryEntry<CallHistoryData>>(ConstantStrings.CALL_HISTORY_FILE_PATH);
         var contactsRepository = new JsonRepository<Contact>(ConstantStrings.CONTACT_LIST_FILE_PATH);
         
         _dialManager = new DialManager();
-        
         _callHistoryManager = new CallHistoryManager(callHistoryRepository);
-        _callHistoryManager.SubscribeToDialManager(_dialManager);
-        
         _contactsManager = new ContactsManager(contactsRepository);
+        _exportService = new ExportService();
+        _contactsMenu = new ContactsMenu(_contactsManager, _exportService);
         
+        _dialManager.CallMade += _callHistoryManager.OnCallMade;
         _contactsManager.DialRequested += OnDialRequested;
-        
         _dialManager.RegisterContactLookup(_contactsManager.FindContactByNumber);
     }
 
@@ -54,7 +54,7 @@ public class PhoneApplication
                         _callHistoryManager.DisplayHistory();
                         break;
                     case ConstantStrings.CHOICE_THREE:
-                        await _contactsManager.ShowContactsMenuAsync();
+                        await _contactsMenu.ShowContactsMenuAsync();
                         Console.Clear();
                         ShowWelcomeScreen();
                         continue;

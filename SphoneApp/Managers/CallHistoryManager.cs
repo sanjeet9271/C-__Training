@@ -13,19 +13,13 @@ public class CallHistoryManager : ICallHistoryManager
         _repository = repository;
     }
 
-    // Subscribe to DialManager's CallMade event
-    public void SubscribeToDialManager(IDialManager dialManager)
-    {
-        dialManager.CallMade += OnCallMade;
-    }
-
     // Event handler for when a call is made
-    private void OnCallMade(object? sender, CallMadeEventArgs e)
+    // Public so PhoneApplication can subscribe directly
+    public void OnCallMade(object? sender, CallMadeEventArgs e)
     {
         AddCallToHistory(e.PhoneNumber, e.ContactName, e.CalledAt);
     }
 
-    // Display call history
     public void DisplayHistory()
     {
         Console.WriteLine(ConstantStrings.CALL_HISTORY_TITLE);
@@ -74,7 +68,6 @@ public class CallHistoryManager : ICallHistoryManager
         var data = new CallHistoryData(phoneNumber, contactName);
         var entry = new CallHistoryEntry<CallHistoryData>(data, calledAt);
         
-        // Insert at beginning for latest-first ordering
         var allHistory = _repository.GetAll();
         allHistory.Insert(0, entry);
         _repository.SaveChanges();

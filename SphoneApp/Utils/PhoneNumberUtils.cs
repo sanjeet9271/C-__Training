@@ -11,7 +11,6 @@ public static class PhoneNumberUtils
             throw new InvalidPhoneNumberException(ConstantStrings.PHONE_NUMBER_CANNOT_BE_EMPTY);
         }
 
-        // Remove spaces and dashes for validation
         string cleanNumber = CleanPhoneNumber(phoneNumber);
 
         if (cleanNumber.Length != ConstantStrings.VALID_PHONE_NUMBER_LENGTH)
