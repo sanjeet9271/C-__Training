@@ -40,26 +40,21 @@ public class Contact
         PhoneNumbers = phoneNumbers ?? new List<CustomProperty>();
     }
 
-    // Helper constructor for single phone number (backward compatibility)
     public Contact(string name, string phoneNo, ContactType type)
     {
         Name = name;
         PhoneNumbers = new List<CustomProperty> { new CustomProperty(phoneNo, type) };
     }
 
-    // Helper method to add a phone number
     public void AddPhoneNumber(string phoneNo, ContactType type)
     {
         PhoneNumbers.Add(new CustomProperty(phoneNo, type));
     }
-
-    // Helper method to get primary phone number (first one)
     public string? GetPrimaryPhoneNumber()
     {
         return PhoneNumbers.FirstOrDefault().PhoneNo;
     }
 
-    // Check if contact has a specific phone number
     public bool HasPhoneNumber(string phoneNo)
     {
         return PhoneNumbers.Any(p => p.PhoneNo == phoneNo);

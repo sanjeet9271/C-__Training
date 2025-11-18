@@ -3,11 +3,7 @@ using SphoneApp.Interfaces;
 
 namespace SphoneApp.Repositories;
 
-/// <summary>
-/// Generic JSON file-based repository implementation
-/// Follows Single Responsibility - only handles JSON file operations
-/// </summary>
-/// <typeparam name="T">The entity type</typeparam>
+
 public class JsonRepository<T> : IRepository<T> where T : class
 {
     private readonly string _filePath;
